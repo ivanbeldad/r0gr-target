@@ -56,3 +56,61 @@ docker build ./ -t r0gr-target
 # start the service
 docker stack deploy -c ./docker-compose.yml r0gr
 ```
+
+## Contributing
+
+### Adding new protocols and implementations
+
+In order to add new protocols there are three steps we have to take
+
+1. Add the new protocol to the supported protocols by the service at `src/target/models/protocol.enum.ts`
+2. Create the implementation to solve the problem
+    - Under the folder `src/target/priotirizers/strategies` create a new class extending `PriorityDecorator`
+    - Implement the required method `prioritizeStrategy` increasing or decreasing the score of each scan
+      - Use the property `this.scans` to access coordinates, enemies and modify scores
+      - Modify the score by +-1 (-Infinity to discard the scan entirely), and multiply by `this.weight` the result
+        (this will allow to create strategies with higher priority than others)
+3. Add the "Prioritizer" to `src/target/prioritizers/prioritizer-definition.ts`
+
+#### Example using random algorithm
+
+```typescript
+// 1. Add the new protocol
+// src/target/models/protocol.enum.ts
+export enum Protocol {
+  // ...
+  RANDOM = 'random',
+}
+```
+
+```typescript
+// 2. Create the prioritizer implementation
+// src/target/prioritizers/strategies/random-prioritizer.decorator.ts
+export class RandomPrioritizerDecorator extends PriorityDecorator {
+  prioritizeStrategy() {
+    // We increase to score inside each scan a random value between 0 and 1 and multiplied by the weight
+    this.scans.forEach((scan) => (scan.score += Math.random() * this.weight));
+  }
+}
+```
+
+```typescript
+// 3. Associate the protocol with the implementation
+// src/target/prioritizers/priotirizer-definition.ts
+export class PrioritizerDefinition {
+  // ...
+  readonly protocolPrioritizers: ProtocolPrioritizer = {
+    // ...
+    [Protocol.RANDOM]: RandomPrioritizerDecorator,
+  };
+}
+```
+
+### Adding new protocols without implementation
+
+Just follow step 1, skip 2 and add the `PassthroughPrioritizerDecorator` as the implementation in step 3.
+
+### Adding prioritizers on all protocols
+
+To use default implementations used in every protocol, create them normally as defined in step 2,
+then in step 3 add them to `defaultPrioritizers`.
