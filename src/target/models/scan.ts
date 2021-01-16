@@ -17,7 +17,7 @@ export class Scan {
 
   @IsInt()
   @IsOptional()
-  readonly allies: number;
+  readonly allies?: number;
 
-  score: number;
+  score?: number;
 }

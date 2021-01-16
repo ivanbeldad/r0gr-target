@@ -4,6 +4,7 @@ import { BasePrioritizer } from 'src/target/prioritizers/strategies/base-priorit
 import { Prioritizable } from 'src/target/prioritizers/models/prioritizable.interface';
 import { PriorityDecorator } from 'src/target/prioritizers/models/priority-decorator';
 import { PassthroughPrioritizerDecorator } from 'src/target/prioritizers/strategies/passthrough-prioritizer.decorator';
+import { AvoidMechPrioritizerDecorator } from 'src/target/prioritizers/strategies/enemy-types/avoid-mech-prioritizer.decorator';
 
 type PriorityDecoratorClass = new (p: Prioritizable) => PriorityDecorator;
 type ProtocolPrioritizer = { [key in Protocol]: PriorityDecoratorClass };
@@ -28,7 +29,7 @@ export class PrioritizerDefinition {
    * { [Protocol.PROTOCOL_TO_IMPLEMENT]: DecoratorImplementationClass }
    */
   readonly protocolPrioritizers: ProtocolPrioritizer = {
-    [Protocol.AVOID_MECH]: PassthroughPrioritizerDecorator,
+    [Protocol.AVOID_MECH]: AvoidMechPrioritizerDecorator,
     [Protocol.PRIORITIZE_MECH]: PassthroughPrioritizerDecorator,
     [Protocol.CLOSEST_ENEMIES]: PassthroughPrioritizerDecorator,
     [Protocol.FURTHEST_ENEMIES]: PassthroughPrioritizerDecorator,
