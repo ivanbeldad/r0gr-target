@@ -1,5 +1,11 @@
 # R0GR-Target
 
+## Requirements
+
+- node v14.15.4
+- docker
+  - Optional. It's not required to run the project and tests on a local machine.
+
 ## Project structure
 
 - target: everything related to the module target
@@ -116,6 +122,8 @@ To use default implementations used in every protocol, create them normally as d
 then in step 3 add them to `defaultPrioritizers`.
 
 ## Running the tests (e2e)
+
+Unit tests can be executed using the `npm test` command.
 
 First, ensure that the script has the right permissions if it doesn't already
 ```bash
