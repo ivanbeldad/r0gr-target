@@ -114,3 +114,35 @@ Just follow step 1, skip 2 and add the `PassthroughPrioritizerDecorator` as the 
 
 To use default implementations used in every protocol, create them normally as defined in step 2,
 then in step 3 add them to `defaultPrioritizers`.
+
+## Running the tests (e2e)
+
+First, ensure that the script has the right permissions if it doesn't already
+```bash
+chmod +x ./test/tests.sh
+```
+
+> Note: I had to modify the provided tests in order for them to pass.
+> JSON doesn't enforce property order, and the `x` and `y` sometimes jumped around, causing the test to fail
+> even when the output was correct. For example:
+```json
+EXPECTED: {"x":10,"y":30}
+OUTPUT:   {"y":30,"x":10}
+```
+
+### Locally
+
+First you need to have the project running using any of the methods above on localhost.
+
+```bash
+npm run test:e2e
+```
+
+### Remote
+
+The project is deployed on private servers temporarily, so the solution can be tested even without installation.
+In order to execute the tests against that environment change the endpoint to `https://r0gr.beldad.me` like so:
+
+```bash
+npm run test:e2e https://r0gr.beldad.me
+```
