@@ -19,6 +19,7 @@ describe('AvoidMechPrioritizerDecorator', () => {
   it('should increase the score of targets with allies on it', () => {
     expect(prioritizer.scans[1].score).toBeGreaterThan(0);
     expect(prioritizer.scans[3].score).toBeGreaterThan(0);
+    console.log(prioritizer.scans[1]);
   });
 
   it('should not change the score of targets without allies', () => {

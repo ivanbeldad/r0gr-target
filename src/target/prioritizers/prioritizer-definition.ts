@@ -11,8 +11,11 @@ import { AssistAlliesPrioritizerDecorator } from 'src/target/prioritizers/strate
 import { AvoidCrossfirePrioritizerDecorator } from 'src/target/prioritizers/strategies/allies/avoid-crossfire-prioritizer.decorator';
 import { OutOfRangePrioritizerDecorator } from 'src/target/prioritizers/strategies/distance/out-of-range-prioritizer.decorator';
 
-type PriorityDecoratorClass = new (p: Prioritizable) => PriorityDecorator;
-type ProtocolPrioritizer = { [key in Protocol]: PriorityDecoratorClass };
+type WeightedPriorityDecoratorClass = {
+  DecoratorClass: new (p: Prioritizable) => PriorityDecorator;
+  weight?: number;
+};
+type ProtocolPrioritizer = { [key in Protocol]: WeightedPriorityDecoratorClass };
 
 @Injectable()
 export class PrioritizerDefinition {
@@ -24,21 +27,23 @@ export class PrioritizerDefinition {
   /**
    * Define rules that will be applied everywhere, doesn't matter the protocol
    */
-  readonly defaultPrioritizers: PriorityDecoratorClass[] = [OutOfRangePrioritizerDecorator];
+  readonly defaultPrioritizers: WeightedPriorityDecoratorClass[] = [
+    { DecoratorClass: OutOfRangePrioritizerDecorator },
+  ];
 
   /**
    * Define rules that will apply depending on protocol
    * Protocols without implementation have to be declared explicitly using PassthroughPrioritizerDecorator
    *
    * @example
-   * { [Protocol.PROTOCOL_TO_IMPLEMENT]: DecoratorImplementationClass }
+   * { [Protocol.PROTOCOL_TO_IMPLEMENT]: { DecoratorClass: PassthroughPrioritizerDecorator, weight: 0.5 } }
    */
   readonly protocolPrioritizers: ProtocolPrioritizer = {
-    [Protocol.AVOID_MECH]: AvoidMechPrioritizerDecorator,
-    [Protocol.PRIORITIZE_MECH]: PreferMechPrioritizerDecorator,
-    [Protocol.CLOSEST_ENEMIES]: ClosestEnemiesPrioritizerDecorator,
-    [Protocol.FURTHEST_ENEMIES]: FurthestEnemiesPrioritizerDecorator,
-    [Protocol.ASSIST_ALLIES]: AssistAlliesPrioritizerDecorator,
-    [Protocol.AVOID_CROSSFIRE]: AvoidCrossfirePrioritizerDecorator,
+    [Protocol.AVOID_MECH]: { DecoratorClass: AvoidMechPrioritizerDecorator },
+    [Protocol.PRIORITIZE_MECH]: { DecoratorClass: PreferMechPrioritizerDecorator, weight: 2 },
+    [Protocol.CLOSEST_ENEMIES]: { DecoratorClass: ClosestEnemiesPrioritizerDecorator },
+    [Protocol.FURTHEST_ENEMIES]: { DecoratorClass: FurthestEnemiesPrioritizerDecorator },
+    [Protocol.ASSIST_ALLIES]: { DecoratorClass: AssistAlliesPrioritizerDecorator },
+    [Protocol.AVOID_CROSSFIRE]: { DecoratorClass: AvoidCrossfirePrioritizerDecorator },
   };
 }

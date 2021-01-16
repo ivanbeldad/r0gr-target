@@ -88,20 +88,20 @@ export enum Protocol {
 // src/target/prioritizers/strategies/random-prioritizer.decorator.ts
 export class RandomPrioritizerDecorator extends PriorityDecorator {
   prioritizeStrategy() {
-    // We increase to score inside each scan a random value between 0 and 1 and multiplied by the weight
+    // We increase to score inside each scan a random value between 0 and 1 and multiplied the result by the weight
     this.scans.forEach((scan) => (scan.score += Math.random() * this.weight));
   }
 }
 ```
 
 ```typescript
-// 3. Associate the protocol with the implementation
+// 3. Associate the protocol with the implementation (weight optional)
 // src/target/prioritizers/priotirizer-definition.ts
 export class PrioritizerDefinition {
   // ...
   readonly protocolPrioritizers: ProtocolPrioritizer = {
     // ...
-    [Protocol.RANDOM]: RandomPrioritizerDecorator,
+    [Protocol.RANDOM]: { DecoratorClass: RandomPrioritizerDecorator, weight: 0.5 },
   };
 }
 ```

@@ -36,7 +36,7 @@ export abstract class PriorityDecorator implements Prioritizable {
    *  // Double priority
    *  this.weight = 2;
    */
-  protected weight = 1;
+  weight = 1;
 
   get scans() {
     return this.prioritizer.scans;

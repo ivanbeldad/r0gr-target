@@ -7,13 +7,27 @@ export class PrioritizerService {
   constructor(private priorizerDefinition: PrioritizerDefinition) {}
 
   public getComposedPrioritizer(protocols: Protocol[]) {
+    const prioritizerDefs = this.prioritizerDefs(protocols);
+
     let prioritizer = this.priorizerDefinition.basePrioritizer;
-    const defaultPrioritizers = this.priorizerDefinition.defaultPrioritizers;
-    const protocolPrioritizers = protocols.map(
-      (protocol) => this.priorizerDefinition.protocolPrioritizers[protocol],
-    );
-    const PrioritizerDefs = [...defaultPrioritizers, ...protocolPrioritizers];
-    PrioritizerDefs.forEach((PrioritizerDec) => (prioritizer = new PrioritizerDec(prioritizer)));
+
+    prioritizerDefs.forEach(({ DecoratorClass, weight }) => {
+      const decorator = new DecoratorClass(prioritizer);
+      if (weight) decorator.weight = weight;
+      prioritizer = decorator;
+    });
+
     return prioritizer;
+  }
+
+  private prioritizerDefs(protocols: Protocol[]) {
+    return [
+      ...this.priorizerDefinition.defaultPrioritizers,
+      ...this.protocolPrioritizers(protocols),
+    ];
+  }
+
+  private protocolPrioritizers(protocols: Protocol[]) {
+    return protocols.map((protocol) => this.priorizerDefinition.protocolPrioritizers[protocol]);
   }
 }
