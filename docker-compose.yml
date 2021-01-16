@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  target:
+    image: r0gr-target
+    build: .
+    ports:
+      - 8888:3000
+    deploy:
+      replicas: 1   # Increase the number of replicas only in swarm mode
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
