@@ -6,6 +6,7 @@ import { PriorityDecorator } from 'src/target/prioritizers/models/priority-decor
 import { PassthroughPrioritizerDecorator } from 'src/target/prioritizers/strategies/passthrough-prioritizer.decorator';
 import { AvoidMechPrioritizerDecorator } from 'src/target/prioritizers/strategies/enemy-types/avoid-mech-prioritizer.decorator';
 import { PreferMechPrioritizerDecorator } from 'src/target/prioritizers/strategies/enemy-types/prefer-mech-prioritizer.decorator';
+import { ClosestEnemiesPrioritizerDecorator } from 'src/target/prioritizers/strategies/distance/closest-enemies-prioritizer.decorator';
 
 type PriorityDecoratorClass = new (p: Prioritizable) => PriorityDecorator;
 type ProtocolPrioritizer = { [key in Protocol]: PriorityDecoratorClass };
@@ -32,7 +33,7 @@ export class PrioritizerDefinition {
   readonly protocolPrioritizers: ProtocolPrioritizer = {
     [Protocol.AVOID_MECH]: AvoidMechPrioritizerDecorator,
     [Protocol.PRIORITIZE_MECH]: PreferMechPrioritizerDecorator,
-    [Protocol.CLOSEST_ENEMIES]: PassthroughPrioritizerDecorator,
+    [Protocol.CLOSEST_ENEMIES]: ClosestEnemiesPrioritizerDecorator,
     [Protocol.FURTHEST_ENEMIES]: PassthroughPrioritizerDecorator,
     [Protocol.ASSIST_ALLIES]: PassthroughPrioritizerDecorator,
     [Protocol.AVOID_CROSSFIRE]: PassthroughPrioritizerDecorator,

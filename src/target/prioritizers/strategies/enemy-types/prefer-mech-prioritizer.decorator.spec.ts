@@ -1,4 +1,7 @@
+import { plainToClass } from 'class-transformer';
+import 'reflect-metadata';
 import { EnemyType } from 'src/target/models/enemy-type.enum';
+import { Scan } from 'src/target/models/scan';
 import { Prioritizable } from 'src/target/prioritizers/models/prioritizable.interface';
 import { BasePrioritizer } from 'src/target/prioritizers/strategies/base-prioritizer';
 import { PreferMechPrioritizerDecorator } from './prefer-mech-prioritizer.decorator';
@@ -8,13 +11,13 @@ describe('PreferMechPrioritizerDecorator', () => {
 
   beforeAll(() => {
     prioritizer = new PreferMechPrioritizerDecorator(new BasePrioritizer());
-    prioritizer.scans = [
+    prioritizer.scans = plainToClass(Scan, [
       {
         coordinates: {
           x: 1,
           y: 2,
         },
-        enemyGroup: {
+        enemies: {
           size: 10,
           type: EnemyType.MECH,
         },
@@ -25,13 +28,13 @@ describe('PreferMechPrioritizerDecorator', () => {
           x: 1,
           y: 2,
         },
-        enemyGroup: {
+        enemies: {
           size: 10,
           type: EnemyType.SOLDIER,
         },
         score: 0,
       },
-    ];
+    ]);
     prioritizer.prioritize();
   });
 
@@ -40,12 +43,10 @@ describe('PreferMechPrioritizerDecorator', () => {
   });
 
   it('should increase the score of mech enemies', () => {
-    prioritizer.prioritize();
     expect(prioritizer.scans[0].score).toBeGreaterThan(0);
   });
 
   it('should not change the score of other enemy types', () => {
-    prioritizer.prioritize();
     expect(prioritizer.scans[1].score).toBe(0);
   });
 });
