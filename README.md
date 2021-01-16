@@ -8,6 +8,7 @@
     - models: interfaces definitions for prioritizers
     - strategies: everything under this folder will be concrete implementations to get the next target
     - prioritizer-definition.ts: used to define which implementation should be used with each protocol
+- health: endpoint to check the service is up and running
 
 ## Usage
 

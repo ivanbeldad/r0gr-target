@@ -16,4 +16,5 @@ ADD . /app
 COPY --from=build /app/dist /app/dist
 WORKDIR /app
 RUN npm install --silent
+RUN apk add curl
 CMD [ "node", "dist/main.js" ]
