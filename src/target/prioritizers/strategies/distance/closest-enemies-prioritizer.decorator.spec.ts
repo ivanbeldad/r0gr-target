@@ -1,10 +1,8 @@
-import 'reflect-metadata';
-import { plainToClass } from 'class-transformer';
-import { EnemyType } from 'src/target/models/enemy-type.enum';
 import { Scan } from 'src/target/models/scan';
 import { Prioritizable } from 'src/target/prioritizers/models/prioritizable.interface';
 import { BasePrioritizer } from 'src/target/prioritizers/strategies/base-prioritizer';
 import { ClosestEnemiesPrioritizerDecorator } from './closest-enemies-prioritizer.decorator';
+import { createScansMock } from 'src/target/prioritizers/mocks/scans.mock';
 
 describe('ClosestEnemiesPrioritizerDecorator', () => {
   let prioritizer: Prioritizable;
@@ -12,41 +10,7 @@ describe('ClosestEnemiesPrioritizerDecorator', () => {
 
   beforeAll(() => {
     prioritizer = new ClosestEnemiesPrioritizerDecorator(new BasePrioritizer());
-    prioritizer.scans = plainToClass(Scan, [
-      {
-        coordinates: {
-          x: 5,
-          y: 5,
-        },
-        enemies: {
-          size: 10,
-          type: EnemyType.MECH,
-        },
-        score: 0,
-      },
-      {
-        coordinates: {
-          x: 6,
-          y: 1,
-        },
-        enemies: {
-          size: 10,
-          type: EnemyType.MECH,
-        },
-        score: 0,
-      },
-      {
-        coordinates: {
-          x: 4,
-          y: 10,
-        },
-        enemies: {
-          size: 10,
-          type: EnemyType.SOLDIER,
-        },
-        score: 0,
-      },
-    ]);
+    prioritizer.scans = createScansMock();
     prioritizer.prioritize();
     scansSorted = prioritizer.scans.sort((scanA, scanB) => scanB.score - scanA.score);
   });
@@ -61,6 +25,6 @@ describe('ClosestEnemiesPrioritizerDecorator', () => {
   });
 
   it('should not change the score of furthest one', () => {
-    expect(scansSorted[2].score).toBe(0);
+    expect(scansSorted[3].score).toBe(0);
   });
 });
