@@ -16,6 +16,7 @@ API_ENDPOINT="http://localhost:8888"
     do
         INPUT=$(echo "$line" | cut -d"|" -f1)
         EXPECTED=$(echo "$line" | cut -d"|" -f2)
+        EXPECTED_ALT="{$(echo ${EXPECTED/\}/} | cut -d, -f2),$(echo ${EXPECTED/{/} | cut -d, -f1)}"
 
         if [ "$INPUT" != "" ]
         then
@@ -26,7 +27,7 @@ API_ENDPOINT="http://localhost:8888"
                 "$API_ENDPOINT/radar"
             )
 
-            if [ "$EXPECTED" == "$OUTPUT" ]
+            if [ "$EXPECTED" == "$OUTPUT" ] || [ "$EXPECTED_ALT" == "$OUTPUT" ]
             then
                 echo "Test $TEST_NUMBER : ${COLOR_GREEN}[  OK  ]${COLOR_RESET}"
             else
