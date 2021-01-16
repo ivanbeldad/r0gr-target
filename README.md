@@ -152,5 +152,12 @@ The project is deployed on private servers temporarily, so the solution can be t
 In order to execute the tests against that environment change the endpoint to `https://r0gr.beldad.me` like so:
 
 ```bash
+# using npm
 npm run test:e2e https://r0gr.beldad.me
+
+# or without npm
+./test/tests.sh https://r0gr.beldad.me
 ```
+
+> Keep in mind that this is running under a personal private environment.
+> Altought my servers have been running 24/7 during months and the tests most certainly will work against it, **I don't guarantee them to be up all time**.
